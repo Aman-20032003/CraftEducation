@@ -1,3 +1,4 @@
+package com.craft;
 
 
 import org.springframework.boot.SpringApplication;
