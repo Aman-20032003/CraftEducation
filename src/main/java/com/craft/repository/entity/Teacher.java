@@ -1,6 +1,8 @@
 package com.craft.repository.entity;
 
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,8 +29,9 @@ public class Teacher {
 	private String password;
 	private long aadharNumber;
 	private long phoneNumber;
+	private String qualification;
 	private List<String> subjects;
 	private double salary;
-	@OneToMany
+	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<Address> address;
 }

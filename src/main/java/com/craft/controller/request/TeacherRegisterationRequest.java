@@ -18,7 +18,6 @@ public class TeacherRegisterationRequest {
 	
 	private String name;
 	private String emailId;
-	private String password;
 	private long aadharNumber;
 	private long phoneNumber;
 	private String qualification;
