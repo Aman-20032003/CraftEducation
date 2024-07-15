@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.craft.repository.entity.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
+	Admin findByLoginIdAndPassword(String loginId, String password);
 	
 
 }
