@@ -17,8 +17,10 @@ import com.craft.repository.entity.Admin;
 import com.craft.repository.entity.Teacher;
 
 import lombok.Builder;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AdminService {
 
 	@Autowired
