@@ -1,10 +1,9 @@
 package com.craft.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.craft.controller.request.AdminLoginRequest;
@@ -23,9 +22,53 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminService {
 
-	@Autowired
-	private AdminRepository adminRepository;
+//	@Autowired
+//	private AdminRepository adminRepository;
 
+<<<<<<< HEAD
+//	@Cacheable(value = "cacheAdmin", key = "#adminLoginRequest.getEmail")
+//	public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
+//
+//		Admin admin = adminRepository.findByEmailAndPassword(adminLoginRequest.getEmail(),
+//				adminLoginRequest.getPassword());
+//		if (admin != null) {
+//			return new AdminResponse("Login Successfully", true);
+//		}
+//		evictCache(adminLoginRequest.getEmail());
+//		return new AdminResponse("Login Failed !! Invalid Email or Password", false);
+//	}
+//
+//	@CacheEvict(value = "cacheAdmin", key = "#email")
+//	public void evictCache(String email) {
+//		// The @CacheEvict annotation will take care of removing the cache entry
+	
+@Autowired
+private AdminRepository adminRepository;
+
+@Autowired
+private CacheManager cacheManager;
+
+public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
+    String email = adminLoginRequest.getEmail();
+    String password = adminLoginRequest.getPassword();
+
+    Admin admin = adminRepository.findByEmailAndPassword(email, password);
+    if (admin != null) {
+        cacheManager.getCache("cacheAdmin").put(email, admin);
+        return new AdminResponse("Login Successfully", true);
+    } else {
+        evictCache(email);
+        return new AdminResponse("Login Failed !! Invalid Email or Password", false);
+    }
+}
+
+@CacheEvict(value = "cacheAdmin", key = "#email")
+public void evictCache(String email) {
+
+}
+
+}
+=======
 	@Autowired
 	private TeacherRepository teacherRepository;
 
@@ -55,3 +98,4 @@ public class AdminService {
 				"Teacher is registered successfully " + " email id--", HttpStatus.CREATED.value()));
 	}
 }
+>>>>>>> fa7f9984f73471d03d6bb8c66501ac38386b96a8

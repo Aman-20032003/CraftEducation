@@ -23,7 +23,7 @@ public class Admin implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String loginId;
+	private String email;
 	private String password;
 
 }
