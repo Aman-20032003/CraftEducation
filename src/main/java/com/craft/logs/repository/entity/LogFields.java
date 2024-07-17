@@ -7,22 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
- enum LogLevel {
-	INFO, WARN, ERROR, DEBUG
-}
-
+ 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-
 public abstract class LogFields {
 	private String message;
 	
 	@Enumerated(EnumType.STRING)
-	private LogLevel level;
+	private LogLevels level;
 
 	private String dateTime;
 

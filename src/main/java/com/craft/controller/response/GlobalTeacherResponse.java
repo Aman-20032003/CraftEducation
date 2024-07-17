@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GlobalTeacherResponse {
-	 private String mesage ;
-	 private int status;
+	 private String message ;
+	 private int statusCode;
 }

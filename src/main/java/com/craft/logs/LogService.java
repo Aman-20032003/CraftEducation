@@ -3,8 +3,6 @@ package com.craft.logs;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 import com.craft.logs.repository.entity.*;
 import com.craft.logs.repository.AdminLogRepository;
@@ -18,7 +16,7 @@ public class LogService {
 	private TeacherLogRepository teacherLogRepository;
 	private StudentLogRepository studentLogRepository;
 	
-	 @Autowired
+	 
 	public LogService(AdminLogRepository adminLogRepository, TeacherLogRepository teacherLogRepository,
 			StudentLogRepository studentLogRepository) {
 		this.adminLogRepository = adminLogRepository;
@@ -29,28 +27,37 @@ public class LogService {
 	
 	LocalDateTime localDateTime = LocalDateTime.now();
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E, dd-MM-yyyy HH:mm:ss");
+	String formattedDateTime = localDateTime.format(formatter);
+
 	
 	
 	
-	
-	public String logDetailsOfAdmin(String message , String logLevel) {
-		String formattedDateTime = localDateTime.format(formatter);
+	public String logDetailsOfAdmin(String message ,LogLevels logLevel) {
 		AdminLogs adminLogs= AdminLogs.builder()
 				.message(message)
 				.dateTime(formattedDateTime)
 				.level(logLevel).build();
+		adminLogRepository.save(adminLogs);
 		return message;
 		
 	}
 	
-	public String logDetailsOfTeacher(String message,LogLevel logLevel) {
-		String formattedDateTime = localDateTime.format(formatter);
+	public String logDetailsOfTeacher(String message,LogLevels logLevel) {
+	 TeacherLogs teacherLogs= TeacherLogs.builder()
+				.message(message)
+				.dateTime(formattedDateTime)
+				.level(logLevel).build();
+	 teacherLogRepository.save(teacherLogs);
 		return message;
 		
 	}
 	
-	public String logDetailsOfStudent(String message,LogLevel logLevel) {
-		String formattedDateTime = localDateTime.format(formatter);
+	public String logDetailsOfStudent(String message,LogLevels logLevel) {
+		StudentLogs studentLogs= StudentLogs.builder()
+				.message(message)
+				.dateTime(formattedDateTime)
+				.level(logLevel).build();
+		studentLogRepository.save(studentLogs);
 		return message;
 		}
 	
