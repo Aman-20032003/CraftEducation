@@ -28,54 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminService {
 
-//	@Autowired
-//	private AdminRepository adminRepository;
-
-<<<<<<< HEAD
-//	@Cacheable(value = "cacheAdmin", key = "#adminLoginRequest.getEmail")
-=======
-	// @Cacheable(value = "cacheAdmin", key = "#adminLoginRequest.getEmail")
->>>>>>> 3376df29abfcae61e414d5c00d74eb97ae87eed2
-//	public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
-//
-//		Admin admin = adminRepository.findByEmailAndPassword(adminLoginRequest.getEmail(),
-//				adminLoginRequest.getPassword());
-//		if (admin != null) {
-//			return new AdminResponse("Login Successfully", true);
-//		}
-//		evictCache(adminLoginRequest.getEmail());
-//		return new AdminResponse("Login Failed !! Invalid Email or Password", false);
-//	}
-//
-//	@CacheEvict(value = "cacheAdmin", key = "#email")
-//	public void evictCache(String email) {
-//		// The @CacheEvict annotation will take care of removing the cache entry
-
-	@Autowired
-	private AdminRepository adminRepository;
-
-<<<<<<< HEAD
-public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
-    String email = adminLoginRequest.getEmail();
-    String password = adminLoginRequest.getPassword();
-
-    Admin admin = adminRepository.findByEmailAndPassword(email, password);
-    if (admin != null) {
-        cacheManager.getCache("cacheAdmin").put(email, admin);
-        return new AdminResponse("Login Successfully", true);
-    } else {
-        evictCache(email);
-        return new AdminResponse("Login Failed !! Invalid Email or Password", false);
-    }
-}
-
-@CacheEvict(value = "cacheAdmin", key = "#email")
-public void evictCache(String email) {
-
-}
-}
-=======
->>>>>>> 3376df29abfcae61e414d5c00d74eb97ae87eed2
 	@Autowired
 	private TeacherRepository teacherRepository;
 
@@ -86,8 +38,10 @@ public void evictCache(String email) {
 	LogService logService;
 
 	@Autowired
-	private CacheManager cacheManager;
+	private AdminRepository adminRepository;
 
+@Autowired
+private CacheManager cacheManager;
 	public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
 		String email = adminLoginRequest.getEmail();
 		String password = adminLoginRequest.getPassword();
@@ -107,6 +61,8 @@ public void evictCache(String email) {
 
 	}
 
+
+
 //	TEACHER REGISTERATION
 	public ResponseEntity<GlobalTeacherResponse> registerNewTeacher(
 			TeacherRegisterationRequest teacherRegisterationRequest) {
@@ -121,9 +77,10 @@ public void evictCache(String email) {
 		Teacher getTeacher = teacherRepository.findByEmailId(teacherRegisterationRequest.getEmailId());
 		if (getTeacher != null) {
 			log.warn(logService.logDetailsOfTeacher("the teacher is already registered", LogLevels.WARN));
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new GlobalTeacherResponse(
-					"teacher already exists" + " email id-- " + teacherRegisterationRequest.getEmailId(),
-					HttpStatus.CONFLICT.value()));
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(new GlobalTeacherResponse(
+							"teacher already exists" + " email id-- " + teacherRegisterationRequest.getEmailId(),
+							HttpStatus.CONFLICT.value()));
 
 		}
 		Teacher teacher = Teacher.builder().name(teacherRegisterationRequest.getName())
