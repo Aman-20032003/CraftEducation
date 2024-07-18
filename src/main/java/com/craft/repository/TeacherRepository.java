@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.craft.repository.entity.Teacher;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
-
+ public Teacher findByEmailId(String string);
 }
