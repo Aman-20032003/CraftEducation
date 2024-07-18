@@ -11,12 +11,12 @@ import com.craft.repository.entity.Address;
 public class DtoToEntityAddressConverterService {
 
 	public Address convertToEntity(GlobalAddressRequest addressDto) {
-		Address address = new Address();
-		address.setHouseNumber(addressDto.getHouseNumber());
-		address.setCity(addressDto.getCity());
-		address.setPinCode(addressDto.getPinCode());
-		address.setState(addressDto.getState());
-		address.setCountry(addressDto.getCountry());
+		Address address = Address.builder().houseNumber(addressDto.getHouseNumber())
+				.city(addressDto.getCity())
+				.pinCode(addressDto.getPinCode())
+				.State(addressDto.getState())
+				.country(addressDto.getCountry())
+				.build();
 		return address;
 	}
 	public List<Address> convertAddressListToEntity(List<GlobalAddressRequest> addressDtoList){

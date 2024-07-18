@@ -55,7 +55,8 @@ public class TeacherService {
 				.aadharNumber(teacherRegisterationRequest.getAadharNumber())
 				.phoneNumber(teacherRegisterationRequest.getPhoneNumber())
 				.qualification(teacherRegisterationRequest.getQualification())
-				.subjects(teacherRegisterationRequest.getSubjects()).address(addresses).build();
+				.subjects(teacherRegisterationRequest.getSubjects())
+				.address(addresses).build();
 		teacherRepository.save(teacher);
 		log.info(logService.logDetailsOfTeacher("teacher registered successfully", LogLevels.INFO));
 		return ResponseEntity.status(HttpStatus.CREATED).body(new GlobalTeacherResponse(
