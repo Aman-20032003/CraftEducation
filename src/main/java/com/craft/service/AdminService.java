@@ -3,7 +3,8 @@ package com.craft.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.craft.controller.request.AdminLoginRequest;
@@ -23,7 +24,6 @@ public class AdminService {
 //	@Autowired
 //	private AdminRepository adminRepository;
 
-<<<<<<< HEAD
 //	@Cacheable(value = "cacheAdmin", key = "#adminLoginRequest.getEmail")
 //	public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
 //
@@ -64,9 +64,7 @@ public AdminResponse adminLogin(AdminLoginRequest adminLoginRequest) {
 public void evictCache(String email) {
 
 }
-
 }
-=======
 	@Autowired
 	private TeacherRepository teacherRepository;
 
