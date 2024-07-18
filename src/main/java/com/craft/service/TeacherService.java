@@ -31,7 +31,7 @@ public class TeacherService {
 	@Autowired
 	LogService logService;
 
-//	TEACHER REGISTERATION
+//	TEACHER REGISTERATION SERVICE
 	public ResponseEntity<GlobalTeacherResponse> registerNewTeacher(
 			TeacherRegisterationRequest teacherRegisterationRequest) {
 		List<Address> addresses = addressConverter.convertAddressListToEntity(teacherRegisterationRequest.getAddress());
