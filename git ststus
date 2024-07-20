@@ -1,0 +1,155 @@
+[33mcommit 0c1ab6ef47718fb4cdf0a48e64ad95d0f14ea2eb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 59cd6c9 0b303e0
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Thu Jul 18 13:45:48 2024 +0530
+
+    Merge branch 'main' of https://github.com/Aman-20032003/CraftEducation
+    
+    # Conflicts:
+    #       src/main/java/com/craft/service/AdminService.java
+    #       src/main/java/com/craft/service/DtoToEntityAddressConverterService.java
+
+[33mcommit 59cd6c9bf99c31afe15849290996fad0154cc857[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Thu Jul 18 13:42:16 2024 +0530
+
+    changes in teacher
+
+[33mcommit 24e755467cec7eb1ac3b1af4c70a13d47b30c9b2[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Thu Jul 18 13:35:49 2024 +0530
+
+    changes in teacher service
+
+[33mcommit 0b303e09fe1c2b5d4802356b21c9aa003cc0031f[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Thu Jul 18 12:43:24 2024 +0530
+
+    student registration service added
+
+[33mcommit dfce68e6e030888fb6bf24bee8c1951ca3b52ae4[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Thu Jul 18 10:40:51 2024 +0530
+
+    No update
+
+[33mcommit a532d49c709f6e22c1b5278b3c1a5036a289bf40[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Thu Jul 18 10:36:15 2024 +0530
+
+    admin service changed
+
+[33mcommit f3d960ddf46376bca6ac3f4aff3ab06043583bed[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Thu Jul 18 10:30:09 2024 +0530
+
+    teacher service created
+
+[33mcommit 7d9c47ceb061f88d1a166ee9c970bf879b4c052b[m
+Merge: 064f6f9 3376df2
+Author: Aman-20032003 <amankumaran2003>
+Date:   Thu Jul 18 10:17:01 2024 +0530
+
+    no update
+
+[33mcommit 064f6f924844b13d71b97ec1f45e99802e83a819[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Thu Jul 18 10:14:22 2024 +0530
+
+    no update
+
+[33mcommit 3376df29abfcae61e414d5c00d74eb97ae87eed2[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Wed Jul 17 19:41:01 2024 +0530
+
+    added teacher registeration api  and implemented custom logger methods
+
+[33mcommit 24086bc777f630e5271255e806c7badf53f7e324[m
+Merge: 4f0e3dd a5cdcf0
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Tue Jul 16 20:14:32 2024 +0530
+
+    Merge branch 'main' of https://github.com/Aman-20032003/CraftEducation
+
+[33mcommit 4f0e3dd956dc6898e64ec17d7f727a4d6ddae641[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Tue Jul 16 20:12:49 2024 +0530
+
+    logger implemented in Student Service
+
+[33mcommit fdcd17532e9e9b4e337273abef50524daa78d1a9[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Tue Jul 16 20:10:26 2024 +0530
+
+    Slf4j is used to log messages in the database momgodb
+
+[33mcommit a5cdcf04a968d03591573e0073e9d25bc87a2d21[m
+Merge: 41eecbc fa7f998
+Author: Aman-20032003 <amankumaran2003>
+Date:   Tue Jul 16 15:56:53 2024 +0530
+
+    admin cache service added
+
+[33mcommit 41eecbc31a841e3807eb2fc999ac529146808bdc[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Tue Jul 16 15:55:29 2024 +0530
+
+    Admin cache service added
+
+[33mcommit fa7f9984f73471d03d6bb8c66501ac38386b96a8[m
+Merge: c76b2ae d128dea
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Mon Jul 15 13:27:29 2024 +0530
+
+    Merge branch 'main' of https://github.com/Aman-20032003/CraftEducation
+    
+    teacher Registeration included
+
+[33mcommit c76b2aece011a577bd6aae37fdd07aee5c530bde[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Mon Jul 15 13:07:10 2024 +0530
+
+    teacher Registeration service created
+
+[33mcommit d128dea1d3eded3feaa9250874fdb08dd46a83fe[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Mon Jul 15 13:04:05 2024 +0530
+
+    update admin service
+
+[33mcommit 68896bc29da62f551da4bb37528cf0022815848c[m
+Merge: 586b4e4 d7b8d45
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Mon Jul 15 11:03:24 2024 +0530
+
+    Merge branch 'main' of https://github.com/Aman-20032003/CraftEducation
+
+[33mcommit 586b4e4cf0fbc897bc0d9f65b6e025c510093e30[m
+Author: AYUSH <pailossayush@gmailcom>
+Date:   Mon Jul 15 11:02:59 2024 +0530
+
+    created class related to teacher
+
+[33mcommit d7b8d45d63b286a4650cb4d069b0f0d21ea5ea20[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Mon Jul 15 10:59:40 2024 +0530
+
+    Admin login service Added
+
+[33mcommit 76bb39da3eb7f324441508982416a72fa97513f6[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Fri Jul 12 12:54:44 2024 +0530
+
+    project structure defined
+
+[33mcommit a8f5acc71d8dca2c2e0d9a8917ec339af7d56a82[m
+Author: Aman-20032003 <amankumaran2003>
+Date:   Thu Jul 11 10:50:25 2024 +0530
+
+    Project commited
+
+[33mcommit c327666ebfc9790c93f72c624f39026918ed93b8[m
+Author: Aman-20032003 <155214980+Aman-20032003@users.noreply.github.com>
+Date:   Thu Jul 11 10:40:05 2024 +0530
+
+    Initial commit
