@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.craft.controller.request.GlobalAddressRequest;
+import com.craft.controller.request.AddressRequest;
 import com.craft.repository.entity.Address;
 @Service
 public class DtoToEntityAddressConverterService {
 
-	public Address convertToEntity(GlobalAddressRequest addressDto) {
+	public Address convertToEntity(AddressRequest addressDto) {
 		Address address = Address.builder().houseNumber(addressDto.getHouseNumber())
 				.city(addressDto.getCity())
 				.pinCode(addressDto.getPinCode())
@@ -19,7 +19,7 @@ public class DtoToEntityAddressConverterService {
 				.build();
 		return address;
 	}
-	public List<Address> convertAddressListToEntity(List<GlobalAddressRequest> addressDtoList){
+	public List<Address> convertAddressListToEntity(List<AddressRequest> addressDtoList){
 		return addressDtoList.stream().map(this::convertToEntity).collect(Collectors.toList());
 	}
 	

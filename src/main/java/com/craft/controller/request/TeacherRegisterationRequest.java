@@ -20,5 +20,5 @@ public class TeacherRegisterationRequest {
 	private String qualification;
 	private List<String> subjects;
 	private double salary;
-	private List<GlobalAddressRequest> address;
+	private List<AddressRequest> address;
 }

@@ -3,7 +3,6 @@ package com.craft.controller.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 @Data
 @AllArgsConstructor
 

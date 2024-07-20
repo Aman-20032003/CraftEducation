@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GlobalAddressRequest {
+public class AddressRequest {
 	private String houseNumber;
 	private String city;
 	private int pinCode;
