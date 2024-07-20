@@ -64,5 +64,5 @@ public class TeacherService {
 				"Teacher is registered successfully " + " email id--" + teacherRegisterationRequest.getEmailId(),
 				HttpStatus.CREATED.value()));
 	}
-//TEACHER LOGIN SERVICE 
+
 }
