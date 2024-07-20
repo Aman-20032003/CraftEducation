@@ -4,15 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.craft.controller.request.AdminLoginRequest;
-import com.craft.controller.request.TeacherRegisterationRequest;
 import com.craft.controller.response.AdminResponse;
-import com.craft.controller.response.GlobalTeacherResponse;
 import com.craft.service.AdminService;
 
 @RestController
@@ -29,9 +26,5 @@ public class AdminController {
 	        } else {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
 	        }
-	}
-	@PostMapping("/teacherRegisteration")
-	public ResponseEntity<GlobalTeacherResponse> teacherRegisteration(@RequestBody TeacherRegisterationRequest teacherRegisterationRequest){
-		return adminService.registerNewTeacher(teacherRegisterationRequest);
 	}
 }
