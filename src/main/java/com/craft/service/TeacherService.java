@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.craft.controller.request.TeacherRegisterationRequest;
-import com.craft.controller.response.GlobalTeacherResponse;
+
+import com.craft.controller.response.TeacherResponse;
 import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
 import com.craft.repository.TeacherRepository;
@@ -32,20 +33,20 @@ public class TeacherService {
 	LogService logService;
 
 //	TEACHER REGISTERATION SERVICE
-	public ResponseEntity<GlobalTeacherResponse> registerNewTeacher(
+	public ResponseEntity<TeacherResponse> registerNewTeacher(
 			TeacherRegisterationRequest teacherRegisterationRequest) {
 		List<Address> addresses = addressConverter.convertAddressListToEntity(teacherRegisterationRequest.getAddress());
 		Pattern pattern = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-zA-Z]{2,}$");
 		Matcher matcher = pattern.matcher(teacherRegisterationRequest.getEmailId());
 		if (!matcher.matches()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new GlobalTeacherResponse("invalid email syntax ", HttpStatus.BAD_REQUEST.value()));
+					.body(new TeacherResponse("invalid email syntax ", HttpStatus.BAD_REQUEST.value()));
 		}
 
 		Teacher getTeacher = teacherRepository.findByEmailId(teacherRegisterationRequest.getEmailId());
 		if (getTeacher != null) {
 			log.warn(logService.logDetailsOfTeacher("the teacher is already registered", LogLevels.WARN));
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new GlobalTeacherResponse(
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(new TeacherResponse(
 					"teacher already exists" + " email id-- " + teacherRegisterationRequest.getEmailId(),
 					HttpStatus.CONFLICT.value()));
 
@@ -59,7 +60,7 @@ public class TeacherService {
 				.address(addresses).build();
 		teacherRepository.save(teacher);
 		log.info(logService.logDetailsOfTeacher("teacher registered successfully", LogLevels.INFO));
-		return ResponseEntity.status(HttpStatus.CREATED).body(new GlobalTeacherResponse(
+		return ResponseEntity.status(HttpStatus.CREATED).body(new TeacherResponse(
 				"Teacher is registered successfully " + " email id--" + teacherRegisterationRequest.getEmailId(),
 				HttpStatus.CREATED.value()));
 	}

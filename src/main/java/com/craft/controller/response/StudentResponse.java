@@ -2,11 +2,12 @@ package com.craft.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @Data
-public class AdminResponse {
-
+@AllArgsConstructor
+@NoArgsConstructor
+public class StudentResponse {
 	private String message;
 	private boolean success;
 
