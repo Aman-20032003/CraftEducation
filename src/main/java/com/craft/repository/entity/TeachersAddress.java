@@ -1,5 +1,6 @@
 package com.craft.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,9 +17,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Address {
+public class TeachersAddress {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+//	@JsonIgnoreProperties("address")
 	private int id;
 	private String houseNumber;
 	private String city;

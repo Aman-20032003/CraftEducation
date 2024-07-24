@@ -1,7 +1,9 @@
 package com.craft.repository.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -10,18 +12,22 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-public class Teacher {
+@Builder
+public class Teacher  implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy =  GenerationType.AUTO)
 	private int id;
@@ -31,8 +37,11 @@ public class Teacher {
 	private long aadharNumber;
 	private long phoneNumber;
 	private String qualification;
-	private List<String> subjects;
-	private double salary;
 	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<Address> address;
+//	@JsonIgnore
+	private List<TeachersSubject> subjects;
+	private double salary;
+//	@JsonIgnore
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<TeachersAddress> address;
 }

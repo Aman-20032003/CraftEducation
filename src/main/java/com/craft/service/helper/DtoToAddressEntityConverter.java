@@ -1,4 +1,4 @@
-package com.craft.service;
+package com.craft.service.helper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,12 +6,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.craft.controller.request.AddressRequest;
-import com.craft.repository.entity.Address;
+import com.craft.repository.entity.TeachersAddress;
 @Service
-public class DtoToEntityAddressConverterService {
+public class DtoToAddressEntityConverter {
 
-	public Address convertToEntity(AddressRequest addressDto) {
-		Address address = Address.builder().houseNumber(addressDto.getHouseNumber())
+	public TeachersAddress convertToEntity(AddressRequest addressDto) {
+		TeachersAddress address = TeachersAddress.builder().houseNumber(addressDto.getHouseNumber())
 				.city(addressDto.getCity())
 				.pinCode(addressDto.getPinCode())
 				.State(addressDto.getState())
@@ -19,7 +19,7 @@ public class DtoToEntityAddressConverterService {
 				.build();
 		return address;
 	}
-	public List<Address> convertAddressListToEntity(List<AddressRequest> addressDtoList){
+	public List<TeachersAddress> convertAddressListToEntity(List<AddressRequest> addressDtoList){
 		return addressDtoList.stream().map(this::convertToEntity).collect(Collectors.toList());
 	}
 	
