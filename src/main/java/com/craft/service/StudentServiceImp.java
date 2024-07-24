@@ -113,7 +113,7 @@ public class StudentServiceImp implements IStudentService {
 
 	@Override
 	public List<Student> displayStudents() {
-		// TODO Auto-generated method stub
+
 		return repository.findAll();
 	}
 
@@ -139,7 +139,6 @@ public class StudentServiceImp implements IStudentService {
 		}
 		log.warn(logService.logDetailsOfStudent("Student Not found With Email: " + credentialsReq.getEmail(),
 				LogLevels.WARN));
-
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new StudentResponse("Student Not Found With Email : " + email, false));
 	}
