@@ -13,5 +13,5 @@ public class StudentRegRequest {
 	 private String motherName;
 	 private long aadharCardNo;
 	 private String highQualification;
-	 
+	 private long contactNo;
 }

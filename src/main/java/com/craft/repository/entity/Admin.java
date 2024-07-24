@@ -1,11 +1,9 @@
 package com.craft.repository.entity;
 
-import java.io.Serializable;
+
 import java.util.Collection;
 import java.util.Collections;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,30 +19,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Admin implements UserDetails {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Admin  {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String email;
 	private String password;
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
-	}
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return email;
-	}
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
-	}
+//	@Override
+//	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		// TODO Auto-generated method stub
+//		return Collections.emptyList();
+//	}
+//	@Override
+//	public String getUsername() {
+//		// TODO Auto-generated method stub
+//		return email;
+//	}
+//	@Override
+//	public String getPassword() {
+//		// TODO Auto-generated method stub
+//		return password;
+//	}
 
 }

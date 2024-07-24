@@ -6,6 +6,8 @@ import com.craft.repository.entity.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
 	Admin findByEmailAndPassword(String loginId, String password);
+	Admin findByEmail(String email);
 	
+
 
 }
