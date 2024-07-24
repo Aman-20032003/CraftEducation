@@ -20,8 +20,5 @@ public interface IStudentService {
 	
 	public List<Student> displayStudents();
 	
-	public ResponseEntity<StudentResponse> modifyStudentCredentials(String email,ModifyStudentCredentialsReq credentialsReq) ;
-
-		
+	public ResponseEntity<StudentResponse> modifyStudentCredentials(String email,ModifyStudentCredentialsReq credentialsReq) ;		
 }
- 
