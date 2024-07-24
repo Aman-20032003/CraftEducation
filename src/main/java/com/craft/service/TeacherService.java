@@ -59,9 +59,10 @@ public class TeacherService {
 		Teacher getTeacher = teacherRepository.findByEmailId(teacherRegisterationRequest.getEmailId());
 		if (getTeacher != null) {
 			log.warn(logService.logDetailsOfTeacher("the teacher is already registered", LogLevels.WARN));
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(new TeacherResponse(
-					"teacher already exists" + " email id-- " + teacherRegisterationRequest.getEmailId(),
-					HttpStatus.CONFLICT.value()));
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(new TeacherResponse(
+							"teacher already exists" + " email id-- " + teacherRegisterationRequest.getEmailId(),
+							HttpStatus.CONFLICT.value()));
 
 		}
 //		List<TeachersSubject> teachersSubject = teacherRegisterationRequest.getSubjects().stream().collect(Collectors.toList());

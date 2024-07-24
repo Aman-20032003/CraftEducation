@@ -6,4 +6,6 @@ import com.craft.repository.entity.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Integer> {
 Student findByEmailAndPassword(String email , String password);
+
+Student findByEmail(String email);
 }

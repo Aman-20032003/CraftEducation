@@ -10,19 +10,28 @@ package com.craft.config;
 
 //import com.craft.repository.entity.Admin;
 
-//@Configuration
-//public class SecurityConfig {
-//	@Bean
-//	UserDetailsService detailsService() {
-//		UserDetails user = (UserDetails) Admin.builder().email("ak@gmail.com").password(encoder().encode("abc"))
-//				.build();
-//		return new InMemoryUserDetailsManager(user);
-//	}
-//
-//	@Bean
-//	PasswordEncoder encoder() {
-//		return new BCryptPasswordEncoder();
-//
-//	}
-//
-//}
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig  {
+	@Bean
+	UserDetailsService detailsService() {
+		UserDetails user = (UserDetails) Student.builder().email("ak@gmail.com").password(encoder().encode("abc")).role("Student")
+				.build();
+		return new InMemoryUserDetailsManager(user);
+	}
+
+	@Bean
+	PasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
+
+	}
+	@SuppressWarnings("deprecation")
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		 http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest()
+			      .permitAll())
+			      .csrf(AbstractHttpConfigurer::disable);
+			    return http.build();
+            
+	}
+}
