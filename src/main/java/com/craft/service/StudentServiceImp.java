@@ -15,16 +15,23 @@ import com.craft.controller.request.RemoveStudentRequest;
 import com.craft.controller.request.StudentLoginRequest;
 import com.craft.controller.request.StudentRegRequest;
 import com.craft.controller.response.StudentResponse;
+import com.craft.logs.LogService;
+import com.craft.logs.repository.entity.LogLevels;
 import com.craft.repository.StudentRepository;
 import com.craft.repository.entity.Student;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class StudentServiceImp implements IStudentService {
 
 	@Autowired
 	private StudentRepository repository;
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	private LogService logService;
 
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
 		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
@@ -43,12 +50,16 @@ public class StudentServiceImp implements IStudentService {
 				.highQualification(regRequest.getHighQualification()).contactNo(regRequest.getContactNo()).build();
 		if (student != null) {
 			repository.save(student);
+			log.info(logService.logDetailsOfStudent(
+					"Student Registered Successfully With Email: " + regRequest.getEmail(), LogLevels.INFO));
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new StudentResponse("Student Registeration Successfully", true));
 		}
+		log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
+				LogLevels.WARN));
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new StudentResponse("Student Registeration Successfully", true));
+				.body(new StudentResponse("Student Registration Failed", false));
 
 	}
 
@@ -62,13 +73,20 @@ public class StudentServiceImp implements IStudentService {
 		}
 		Student sCache = (Student) redisTemplate.opsForHash().get(loginRequest.getEmail(), cacheValue);
 		if (sCache != null) {
+
 			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Login Successfully", true));
 		}
 		Student student = repository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 		if (student != null) {
+			log.info(logService.logDetailsOfStudent("Login Successfully With Email: " + loginRequest.getEmail(),
+					LogLevels.INFO));
+
 			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Login Successfully", true));
 		}
 		evictCache(loginRequest.getEmail());
+		log.warn(
+				logService.logDetailsOfStudent("Login Failed! With Email: " + loginRequest.getEmail(), LogLevels.WARN));
+
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 				.body(new StudentResponse("Login Failed !! Invalid Email or Password", false));
 
@@ -82,18 +100,25 @@ public class StudentServiceImp implements IStudentService {
 		Student student = repository.findByEmail(removeStudentRequest.getEmail());
 		if (student != null) {
 			repository.delete(student);
+			log.info(logService.logDetailsOfStudent(
+					"Student Removed Successfully With Email: " + removeStudentRequest.getEmail(), LogLevels.INFO));
+
 			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Removed Successfully", true));
 		}
+		log.warn(logService.logDetailsOfStudent("Student Not Found! With Email: " + removeStudentRequest.getEmail(),
+				LogLevels.WARN));
+
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StudentResponse("Student Not Found", false));
 	}
 
 	@Override
 	public List<Student> displayStudents() {
-		// TODO Auto-generated method stub
+
 		return repository.findAll();
 	}
 
-	public ResponseEntity<StudentResponse> modifyStudentCredentials(String email,ModifyStudentCredentialsReq credentialsReq) {
+	public ResponseEntity<StudentResponse> modifyStudentCredentials(String email,
+			ModifyStudentCredentialsReq credentialsReq) {
 
 		Student student = repository.findByEmail(email);
 		if (student != null) {
@@ -105,9 +130,17 @@ public class StudentServiceImp implements IStudentService {
 			student.setMotherName(credentialsReq.getMotherName());
 			student.setName(credentialsReq.getName());
 			repository.save(student);
-			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Credentials Updated Successfully",true));
+			log.info(logService.logDetailsOfStudent(
+					"Student Credentials Updated Successfully With Email: " + credentialsReq.getEmail(),
+					LogLevels.INFO));
+
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new StudentResponse("Student Credentials Updated Successfully", true));
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StudentResponse("Student Not Found With Email : "+email,false));
+		log.warn(logService.logDetailsOfStudent("Student Not found With Email: " + credentialsReq.getEmail(),
+				LogLevels.WARN));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(new StudentResponse("Student Not Found With Email : " + email, false));
 	}
 
 }
