@@ -18,5 +18,7 @@ import lombok.Setter;
 public class AddCourseRequest {
 	String courseName;
 	String coureDetails;
+	String courseDuration;
+	double courseFee;
 	List<AddSubjectRequest> subjects;
 }

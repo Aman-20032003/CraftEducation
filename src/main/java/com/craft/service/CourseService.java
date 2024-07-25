@@ -27,7 +27,9 @@ public class CourseService implements ICourseService {
 	public ResponseEntity<CourseResponse> addCourse(AddCourseRequest addCourseRequest) {
 		List<Subject> subjects = subjectEntityConverter.convertStremOfSubjectToEntity(addCourseRequest.getSubjects());
 		Course newCourse = Course.builder().courseName(addCourseRequest.getCourseName())
-				.courseDetails(addCourseRequest.getCoureDetails()).subject(subjects)
+				.duration(addCourseRequest.getCourseDuration())
+				.fee(addCourseRequest.getCourseFee())
+				.courseDescription(addCourseRequest.getCoureDetails()).subject(subjects)
 	            .build();
 		courseRepository.save(newCourse);
 		return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse("new course added ",HttpStatus.OK.value()));

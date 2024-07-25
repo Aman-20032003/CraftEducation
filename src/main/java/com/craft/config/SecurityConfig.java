@@ -16,7 +16,7 @@ import com.craft.repository.entity.Admin;
 import com.craft.repository.entity.Student;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity 
 public class SecurityConfig  {
 	@Bean
 	UserDetailsService detailsService() {

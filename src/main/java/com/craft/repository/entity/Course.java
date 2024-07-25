@@ -28,7 +28,9 @@ public class Course {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	int id;
 	String courseName;
-	String courseDetails;
+	String courseDescription;
+	String duration;
+	double fee;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	List<Subject> subject;
 }
