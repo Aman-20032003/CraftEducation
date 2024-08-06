@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import com.craft.config.CustomUserDetailsService;
@@ -37,10 +38,10 @@ public class StudentServiceImp implements IStudentService {
 	@Autowired
 	private LogService logService;
 	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
+	private UserDetailsService customUserDetailsService;
 	@Autowired
 	private JwtHelper helper;
-	
+
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
 //		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
 //		Matcher m = p.matcher(regRequest.getEmail());
@@ -56,21 +57,20 @@ public class StudentServiceImp implements IStudentService {
 				.name(regRequest.getName()).aadharCardNo(regRequest.getAadharCardNo())
 				.fatherName(regRequest.getFatherName()).motherName(regRequest.getMotherName())
 				.highQualification(regRequest.getHighQualification()).contactNo(regRequest.getContactNo()).build();
-		if (student==null) {
-			
-			
+		if (student == null) {
+
 			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
 					LogLevels.WARN));
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new StudentResponse("Student Registration Failed", false));
-			}
-			repository.save(student);
-			
-			log.info(logService.logDetailsOfStudent(
-					"Student Registered Successfully With Email: " + student.getEmail(), LogLevels.INFO));
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new StudentResponse("Student Registeration Successfully", true));
+		}
+		repository.save(student);
+
+		log.info(logService.logDetailsOfStudent("Student Registered Successfully With Email: " + student.getEmail(),
+				LogLevels.INFO));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new StudentResponse("Student Registeration Successfully", true));
 	}
 
 	public ResponseEntity<JwtResponse> studentLogin(StudentLoginRequest loginRequest) {
@@ -79,13 +79,14 @@ public class StudentServiceImp implements IStudentService {
 		Matcher m = p.matcher(loginRequest.getEmail());
 		if (!m.find()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false,null));
+					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
 		}
 		Student sCache = (Student) redisTemplate.opsForHash().get(loginRequest.getEmail(), cacheValue);
 		if (sCache != null) {
 			UserDetails details = customUserDetailsService.loadUserByUsername(sCache.getEmail());
 			String token = helper.generateToken(details);
-			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Student Login Successfully", true,token));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new JwtResponse("Student Login Successfully", true, token));
 		}
 		Student student = repository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 		if (student != null) {
@@ -94,14 +95,15 @@ public class StudentServiceImp implements IStudentService {
 			log.info(logService.logDetailsOfStudent("Login Successfully With Email: " + loginRequest.getEmail(),
 					LogLevels.INFO));
 
-			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Student Login Successfully", true,token));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new JwtResponse("Student Login Successfully", true, token));
 		}
 		evictCache(loginRequest.getEmail());
 		log.warn(
 				logService.logDetailsOfStudent("Login Failed! With Email: " + loginRequest.getEmail(), LogLevels.WARN));
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new JwtResponse("Login Failed !! Invalid Email or Password", false,null));
+				.body(new JwtResponse("Login Failed !! Invalid Email or Password", false, null));
 
 	}
 
