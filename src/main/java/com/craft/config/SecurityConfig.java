@@ -28,7 +28,7 @@ public class SecurityConfig  {
 	     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	        http.csrf(csrf -> csrf.disable())
 	            .authorizeHttpRequests(requests -> requests
-	                .requestMatchers("/student/login", "/student/registeration").permitAll()
+	                .requestMatchers("/student/login", "/student/registeration","/swagger-ui/", "/v3/api-docs/","/swagger-ui.html").permitAll()
 	                .anyRequest().authenticated())
 	            .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationConfig))
 	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

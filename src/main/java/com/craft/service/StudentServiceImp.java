@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import com.craft.config.CustomUserDetailsService;
 import com.craft.config.JwtHelper;
 import com.craft.controller.request.ModifyStudentCredentialsReq;
 import com.craft.controller.request.RemoveStudentRequest;
