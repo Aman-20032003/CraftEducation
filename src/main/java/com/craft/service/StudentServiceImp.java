@@ -8,12 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.craft.config.CustomUserDetailsService;
+import com.craft.config.JwtHelper;
 import com.craft.controller.request.ModifyStudentCredentialsReq;
 import com.craft.controller.request.RemoveStudentRequest;
 import com.craft.controller.request.StudentLoginRequest;
 import com.craft.controller.request.StudentRegRequest;
+import com.craft.controller.response.JwtResponse;
 import com.craft.controller.response.StudentResponse;
 import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
@@ -32,14 +36,18 @@ public class StudentServiceImp implements IStudentService {
 	private RedisTemplate<String, Object> redisTemplate;
 	@Autowired
 	private LogService logService;
-
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
+	@Autowired
+	private JwtHelper helper;
+	
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
-		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
-		Matcher m = p.matcher(regRequest.getEmail());
-		if (!m.find()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new StudentResponse("Invalid Email Format Or Email Must Not Be Empty", false));
-		}
+//		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
+//		Matcher m = p.matcher(regRequest.getEmail());
+//		if (!m.find()) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(new StudentJwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
+//		}
 		Student student1 = repository.findByEmail(regRequest.getEmail());
 		if (student1 != null) {
 			new StudentResponse("User Already Exists", false);
@@ -48,47 +56,52 @@ public class StudentServiceImp implements IStudentService {
 				.name(regRequest.getName()).aadharCardNo(regRequest.getAadharCardNo())
 				.fatherName(regRequest.getFatherName()).motherName(regRequest.getMotherName())
 				.highQualification(regRequest.getHighQualification()).contactNo(regRequest.getContactNo()).build();
-		if (student != null) {
+		if (student==null) {
+			
+			
+			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
+					LogLevels.WARN));
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StudentResponse("Student Registration Failed", false));
+			}
 			repository.save(student);
+			
 			log.info(logService.logDetailsOfStudent(
-					"Student Registered Successfully With Email: " + regRequest.getEmail(), LogLevels.INFO));
+					"Student Registered Successfully With Email: " + student.getEmail(), LogLevels.INFO));
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new StudentResponse("Student Registeration Successfully", true));
-		}
-		log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
-				LogLevels.WARN));
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-				.body(new StudentResponse("Student Registration Failed", false));
-
 	}
 
-	public ResponseEntity<StudentResponse> studentLogin(StudentLoginRequest loginRequest) {
+	public ResponseEntity<JwtResponse> studentLogin(StudentLoginRequest loginRequest) {
 		String cacheValue = "cacheStudent";
 		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
 		Matcher m = p.matcher(loginRequest.getEmail());
 		if (!m.find()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new StudentResponse("Invalid Email Format Or Email Must Not Be Empty", false));
+					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false,null));
 		}
 		Student sCache = (Student) redisTemplate.opsForHash().get(loginRequest.getEmail(), cacheValue);
 		if (sCache != null) {
-
-			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Login Successfully", true));
+			UserDetails details = customUserDetailsService.loadUserByUsername(sCache.getEmail());
+			String token = helper.generateToken(details);
+			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Student Login Successfully", true,token));
 		}
 		Student student = repository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 		if (student != null) {
+			UserDetails details = customUserDetailsService.loadUserByUsername(student.getEmail());
+			String token = helper.generateToken(details);
 			log.info(logService.logDetailsOfStudent("Login Successfully With Email: " + loginRequest.getEmail(),
 					LogLevels.INFO));
 
-			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Login Successfully", true));
+			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Student Login Successfully", true,token));
 		}
 		evictCache(loginRequest.getEmail());
 		log.warn(
 				logService.logDetailsOfStudent("Login Failed! With Email: " + loginRequest.getEmail(), LogLevels.WARN));
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new StudentResponse("Login Failed !! Invalid Email or Password", false));
+				.body(new JwtResponse("Login Failed !! Invalid Email or Password", false,null));
 
 	}
 

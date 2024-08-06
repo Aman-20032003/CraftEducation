@@ -2,8 +2,6 @@ package com.craft.repository.entity;
 
 import java.util.List;
 
-import com.craft.controller.request.AddSubjectRequest;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

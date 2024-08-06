@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class AdminService {
+public class AdminServiceImp implements IAdminService {
 
 	@Autowired
 	private AdminRepository adminRepository;

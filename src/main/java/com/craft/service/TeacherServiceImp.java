@@ -4,8 +4,6 @@ package com.craft.service;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -28,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class TeacherService {
+public class TeacherServiceImp implements ITeacherService {
 	@Autowired
 	private TeacherRepository teacherRepository;
 
@@ -66,6 +64,8 @@ public class TeacherService {
 
 		}
 //		List<TeachersSubject> teachersSubject = teacherRegisterationRequest.getSubjects().stream().collect(Collectors.toList());
+		
+		
 		Teacher teacher = Teacher.builder().name(teacherRegisterationRequest.getName())
 				.emailId(teacherRegisterationRequest.getEmailId())
 				.aadharNumber(teacherRegisterationRequest.getAadharNumber())
