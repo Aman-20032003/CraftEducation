@@ -39,7 +39,6 @@ public class Student implements UserDetails {
 	private long aadharCardNo;
 	private String highQualification;
 	private long contactNo;
-	private String role;
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub

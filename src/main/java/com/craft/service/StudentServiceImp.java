@@ -73,12 +73,12 @@ public class StudentServiceImp implements IStudentService {
 
 	public ResponseEntity<JwtResponse> studentLogin(StudentLoginRequest loginRequest) {
 		String cacheValue = "cacheStudent";
-		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
-		Matcher m = p.matcher(loginRequest.getEmail());
-		if (!m.find()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
-		}
+//		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
+//		Matcher m = p.matcher(loginRequest.getEmail());
+//		if (!m.find()) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
+//		}
 		Student sCache = (Student) redisTemplate.opsForHash().get(loginRequest.getEmail(), cacheValue);
 		if (sCache != null) {
 			UserDetails details = customUserDetailsService.loadUserByUsername(sCache.getEmail());

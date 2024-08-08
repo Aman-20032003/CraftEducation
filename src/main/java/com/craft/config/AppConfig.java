@@ -23,12 +23,12 @@ public class AppConfig {
 //	    }
 //
 	    @Bean
-	    public PasswordEncoder passwordEncoder() {
+	     PasswordEncoder passwordEncoder() {
 	        return new BCryptPasswordEncoder();
 	    }
 
 	    @Bean
-	    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+	     AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
 	        return builder.getAuthenticationManager();
 	    }
 }
