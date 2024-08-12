@@ -90,8 +90,8 @@ public class TeacherService {
 			
 			String cacheValue="cacheTeacher";
 			
-			Teacher teacher = (Teacher) redisTemplate.opsForHash().get(email,cacheValue);
-			if (teacher != null) {
+			Teacher cachedTeacherData = (Teacher) redisTemplate.opsForHash().get(email,cacheValue);
+			if (cachedTeacherData != null) {
 				return ResponseEntity.status(HttpStatus.OK).body( new TeacherResponse("Teacher loggedin successfully " + " email id--" +teacherLoginRequest.getEmail(),
 				HttpStatus.OK.value()));
 			}
@@ -102,15 +102,22 @@ public class TeacherService {
 			return ResponseEntity.status(HttpStatus.OK).body( new TeacherResponse("Teacher loggedin successfully " + " email id--" +teacherLoginRequest.getEmail(),
 					HttpStatus.OK.value()));
 				
-			} else {
-
-				evictCache(email);
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( new TeacherResponse(" login request failed" + " email id--" +teacherLoginRequest.getEmail(),
-						HttpStatus.UNAUTHORIZED.value()));
 			}
+//			else {
+//
+//				evictCache(email);
+//				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( new TeacherResponse(" login request failed" + " email id--" +teacherLoginRequest.getEmail(),
+//						HttpStatus.UNAUTHORIZED.value()));
+//			}
 			
 	}
-	public void evictCache(String email) {
-	      redisTemplate.delete(email);
-	}
+//	public void evictCache(String email) {
+//	      redisTemplate.delete(email);
+//	}
+
+//	TEACHER LOGOUT SRVICE
+	public ResponseEntity<TeacherResponse> teacherLogOut(){
+		return null;
+		
+	} 
 }

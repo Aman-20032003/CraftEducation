@@ -1,5 +1,7 @@
 package com.craft.repository.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +19,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Subject {
+public class Subject  {
+	
 	@Id
 	@GeneratedValue(strategy =GenerationType.AUTO  )
 	int id ;

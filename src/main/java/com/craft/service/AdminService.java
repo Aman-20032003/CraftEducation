@@ -53,7 +53,7 @@ public class AdminService {
 		}
 	}
 
-	public void evictCache(String email) {
+	public void evictCache(String email) { 
 		redisTemplate.delete(email);
 	}
 }
