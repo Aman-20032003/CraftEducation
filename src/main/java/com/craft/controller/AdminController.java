@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.craft.controller.request.AdminLoginRequest;
 import com.craft.controller.response.AdminResponse;
-import com.craft.service.AdminService;
+import com.craft.service.AdminServiceImp;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 	@Autowired
-	private AdminService adminService;
+	private AdminServiceImp adminService;
 
 	@GetMapping("/login")
 	public ResponseEntity<AdminResponse> login(@RequestBody AdminLoginRequest adminLoginRequest) {

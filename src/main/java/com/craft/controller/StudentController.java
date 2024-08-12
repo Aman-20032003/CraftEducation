@@ -18,6 +18,7 @@ import com.craft.controller.request.ModifyStudentCredentialsReq;
 import com.craft.controller.request.RemoveStudentRequest;
 import com.craft.controller.request.StudentLoginRequest;
 import com.craft.controller.request.StudentRegRequest;
+import com.craft.controller.response.JwtResponse;
 import com.craft.controller.response.StudentResponse;
 import com.craft.repository.entity.Student;
 import com.craft.service.IStudentService;
@@ -30,12 +31,12 @@ public class StudentController {
 private IStudentService service;
 
 @PostMapping("/registeration")
-public ResponseEntity<StudentResponse>StudentRegisteration(@RequestBody StudentRegRequest regRequest){
+public ResponseEntity<StudentResponse> StudentRegisteration(@RequestBody StudentRegRequest regRequest){
 	return service.studentRegister(regRequest);
 	
 }
 @GetMapping("/login")
-public ResponseEntity<StudentResponse>StudentLogin (@RequestBody StudentLoginRequest loginRequest){
+public ResponseEntity<JwtResponse>StudentLogin (@RequestBody StudentLoginRequest loginRequest){
 	return service.studentLogin(loginRequest);
 
 }

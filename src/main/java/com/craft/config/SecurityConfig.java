@@ -1,42 +1,53 @@
 package com.craft.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-import com.craft.repository.entity.Admin;
-import com.craft.repository.entity.Student;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity 
-public class SecurityConfig  {
-	@Bean
-	UserDetailsService detailsService() {
-		UserDetails user = (UserDetails) Student.builder().email("ak@gmail.com").password(encoder().encode("abc")).role("Student")
-				.build();
-		return new InMemoryUserDetailsManager(user);
-	}
+@EnableWebSecurity
+public class SecurityConfig {
 
-	@Bean
-	PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
+	@Autowired
+	private JwtAuthenticationConfig authenticationConfig;
+	@Autowired
+	private JwtAuthenticationFilter authenticationFilter;
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-	}
-	@SuppressWarnings("deprecation")
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		 http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest()
-			      .permitAll())
-			      .csrf(AbstractHttpConfigurer::disable);
-			    return http.build();
-            
+	        http.csrf(csrf -> csrf.disable())
+	            .authorizeHttpRequests(requests -> requests
+	                .requestMatchers("/student/login", "/student/registeration","/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
+							"/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**")
+	                
+	                   .permitAll()
+	                .anyRequest().authenticated())
+	            .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationConfig))
+	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+	        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                           
+	        return http.build();
+
 	}
+
+	@Bean
+	DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(customUserDetailsService);
+		authenticationProvider.setPasswordEncoder(passwordEncoder);
+		return authenticationProvider;
+	}
+
 }
