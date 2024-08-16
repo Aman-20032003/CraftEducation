@@ -31,14 +31,12 @@ import lombok.ToString;
 public class Course{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
 	String courseName;
 	String courseDescription;
 	String duration;
 	double fee;
-	@OneToMany(cascade = CascadeType.PERSIST)
-	List<Subject> subject;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	List<Subject> subjects;
 }

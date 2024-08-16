@@ -22,13 +22,21 @@ import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
 import com.craft.repository.StudentRepository;
 import com.craft.repository.entity.Student;
+import com.craft.repository.entity.StudentAdddress;
+import com.craft.repository.entity.StudentCourse;
+import com.craft.service.helper.DtoToAddressEntityConverter;
+import com.craft.service.helper.DtoToStudentCourseEntityConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class StudentServiceImp implements IStudentService {
-
+	
+	@Autowired
+	DtoToStudentCourseEntityConverter entityConverter;
+	@Autowired
+	DtoToAddressEntityConverter addressEntityConverter;
 	@Autowired
 	private StudentRepository repository;
 	@Autowired
@@ -41,6 +49,8 @@ public class StudentServiceImp implements IStudentService {
 	private JwtHelper helper;
 
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
+		List<StudentCourse> courses =entityConverter.convertStremOfCourseToEntity(regRequest.getStudentCourses()) ;
+		List<StudentAdddress> addresses =addressEntityConverter.convertStudentAddressListToEntity(regRequest.getStudentAddress());
 //		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
 //		Matcher m = p.matcher(regRequest.getEmail());
 //		if (!m.find()) {
@@ -53,13 +63,15 @@ public class StudentServiceImp implements IStudentService {
 		}
 		Student student = Student.builder().email(regRequest.getEmail()).password(regRequest.getPassword())
 				.name(regRequest.getName()).aadharCardNo(regRequest.getAadharCardNo())
-				.fatherName(regRequest.getFatherName()).motherName(regRequest.getMotherName())
-				.highQualification(regRequest.getHighQualification()).contactNo(regRequest.getContactNo()).build();
+				.qualification(regRequest.getQualification())
+				.contactNo(regRequest.getContactNo())
+				.addressList(addresses)
+				.courseList(courses)
+				.build();
+		
 		if (student == null) {
-
 			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
 					LogLevels.WARN));
-
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new StudentResponse("Student Registration Failed", false));
 		}
@@ -138,9 +150,7 @@ public class StudentServiceImp implements IStudentService {
 			student.setAadharCardNo(credentialsReq.getAadharCardNo());
 			student.setContactNo(credentialsReq.getContactNo());
 			student.setEmail(credentialsReq.getEmail());
-			student.setFatherName(credentialsReq.getFatherName());
-			student.setHighQualification(credentialsReq.getHighQualification());
-			student.setMotherName(credentialsReq.getMotherName());
+			student.setQualification(credentialsReq.getQualification());
 			student.setName(credentialsReq.getName());
 			repository.save(student);
 			log.info(logService.logDetailsOfStudent(

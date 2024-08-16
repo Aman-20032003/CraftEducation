@@ -101,16 +101,14 @@ public class TeacherServiceImp implements ITeacherService {
 			redisTemplate.opsForHash().put(email,cacheValue,teacher2);
 			return ResponseEntity.status(HttpStatus.OK).body( new TeacherResponse("Teacher loggedin successfully " + " email id--" +teacherLoginRequest.getEmail(),
 					HttpStatus.OK.value()));
-				
-			}
-//			else {
+				}
+			else {
 //
 //				evictCache(email);
-//				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( new TeacherResponse(" login request failed" + " email id--" +teacherLoginRequest.getEmail(),
-//						HttpStatus.UNAUTHORIZED.value()));
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( new TeacherResponse(" login request failed" + " email id--" +teacherLoginRequest.getEmail(),HttpStatus.UNAUTHORIZED.value()));
 //			}
 			
-	}
+	}}
 //	public void evictCache(String email) {
 //	      redisTemplate.delete(email);
 //	}

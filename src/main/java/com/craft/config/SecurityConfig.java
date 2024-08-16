@@ -27,18 +27,17 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	        http.csrf(csrf -> csrf.disable())
-	            .authorizeHttpRequests(requests -> requests
-	                .requestMatchers("/student/login", "/student/registeration","/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
-							"/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**")
-	                
-	                   .permitAll()
-	                .anyRequest().authenticated())
-	            .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationConfig))
-	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-	        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-                           
-	        return http.build();
+		http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(requests -> requests
+						.requestMatchers("/student/login", "/student/registeration", "  ",
+								"/configuration/ui", "/swagger-resources/**", "/configuration/security",
+								"/swagger-ui.html", "/webjars/**", "/swagger-ui/**")
+						.permitAll().anyRequest().authenticated())
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationConfig))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
 
 	}
 
