@@ -1,17 +1,18 @@
 package com.craft.controller.request;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class StudentRegRequest {
-	private String email ;
-	private String password; 
-	private String name ;
-	 private String fatherName;
-	 private String motherName;
-	 private long aadharCardNo;
-	 private String highQualification;
-	 private long contactNo;
+	private String email;
+	private String password;
+	private String name;
+	private long aadharCardNo;
+	private String qualification;
+	private long contactNo;
+	private List<StudentCourseRequest> studentCourses;
+	private List<AddressRequest> studentAddress;
 }

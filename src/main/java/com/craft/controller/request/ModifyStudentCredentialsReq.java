@@ -4,12 +4,10 @@ import lombok.Data;
 
 @Data
 public class ModifyStudentCredentialsReq {
-	private String name;
-	private String fatherName;
+	private String name;	
 	private String email;
-	private String motherName;
 	private long aadharCardNo;
-	private String highQualification;
+	private String Qualification;
 	private long contactNo;
 
 }

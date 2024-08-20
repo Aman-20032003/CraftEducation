@@ -68,7 +68,7 @@ public class AdminServiceImp implements IAdminService {
 		}
 	}
 
-	public void evictCache(String email) {
+	public void evictCache(String email) { 
 		redisTemplate.delete(email);
 	}
 }
