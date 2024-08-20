@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +40,7 @@ public ResponseEntity<JwtResponse>StudentLogin (@RequestBody StudentLoginRequest
 	return service.studentLogin(loginRequest);
 
 }
+//@PreAuthorize("hasRole('STUDENT')")
 @DeleteMapping("/removeStudent")
 public ResponseEntity<StudentResponse>deleteStudent(@RequestBody RemoveStudentRequest removeStudentRequest){
 	return service.removeStudent(removeStudentRequest);
@@ -48,6 +49,7 @@ public ResponseEntity<StudentResponse>deleteStudent(@RequestBody RemoveStudentRe
 public List<Student>getAllStudents(){
 	return service.displayStudents();
 }
+
 @PutMapping("/update/{email}")
 public ResponseEntity<StudentResponse>updateStudentCrerdentials(@PathVariable String email , @RequestBody ModifyStudentCredentialsReq credentialsReq){
 	return service.modifyStudentCredentials(email, credentialsReq);

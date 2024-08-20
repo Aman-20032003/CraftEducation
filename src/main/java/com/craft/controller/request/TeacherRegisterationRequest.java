@@ -7,13 +7,11 @@ import com.craft.repository.entity.Subject;
 import com.craft.repository.entity.TeachersSubject;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class TeacherRegisterationRequest {
 	
 	private String name;

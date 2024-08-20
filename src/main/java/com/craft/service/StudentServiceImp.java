@@ -1,8 +1,6 @@
 package com.craft.service;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,6 +19,7 @@ import com.craft.controller.response.StudentResponse;
 import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
 import com.craft.repository.StudentRepository;
+import com.craft.repository.entity.Role;
 import com.craft.repository.entity.Student;
 import com.craft.repository.entity.StudentAdddress;
 import com.craft.repository.entity.StudentCourse;
@@ -70,7 +69,7 @@ public class StudentServiceImp implements IStudentService {
 				.build();
 		
 		if (student == null) {
-			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
+			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " +regRequest.getEmail(),
 					LogLevels.WARN));
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new StudentResponse("Student Registration Failed", false));
@@ -153,6 +152,7 @@ public class StudentServiceImp implements IStudentService {
 			student.setQualification(credentialsReq.getQualification());
 			student.setName(credentialsReq.getName());
 			repository.save(student);
+			evictCache(email);
 			log.info(logService.logDetailsOfStudent(
 					"Student Credentials Updated Successfully With Email: " + credentialsReq.getEmail(),
 					LogLevels.INFO));

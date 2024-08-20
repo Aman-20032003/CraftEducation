@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import com.craft.repository.entity.Student;
+
 @Configuration
 public class AppConfig {
 //	 @Bean
@@ -22,13 +23,13 @@ public class AppConfig {
 //	        return new InMemoryUserDetailsManager(userDetails);
 //	    }
 //
-	    @Bean
-	     PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-	    @Bean
-	     AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
-	        return builder.getAuthenticationManager();
-	    }
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+		return builder.getAuthenticationManager();
+	}
 }

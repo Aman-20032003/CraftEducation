@@ -1,12 +1,19 @@
 package com.craft.repository.entity;
 
-import java.io.Serializable;
+
+
+import java.util.Collection;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +30,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Teacher  implements Serializable {
+public class Teacher implements UserDetails{
 	/**
 	 * 
 	 */
@@ -44,4 +51,26 @@ public class Teacher  implements Serializable {
 //	@JsonIgnore
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<TeachersAddress> address;
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return role.getAuthorities();}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return emailId;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
+	}
+	
+	
 }

@@ -1,16 +1,19 @@
 package com.craft.repository.entity;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,20 +43,20 @@ public class Student implements UserDetails {
 	private long aadharCardNo;
 	private String qualification;
 	private long contactNo;
-	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<StudentCourse> courseList;
-	@OneToMany(cascade = CascadeType.PERSIST)
-	private List<StudentAdddress> addressList;
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return Collections.emptyList();
-	}
+		return role.getAuthorities();}
+
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return email;
 	}
+
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
