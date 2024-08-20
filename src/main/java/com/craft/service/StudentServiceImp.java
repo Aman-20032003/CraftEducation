@@ -57,9 +57,9 @@ public class StudentServiceImp implements IStudentService {
 //			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 //					.body(new StudentJwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
 //		}
-		Student student1 = repository.findByEmail(regRequest.getEmail());
-		if (student1 != null) {
-			new StudentResponse("User Already Exists", false);
+		Student studentInRepository = repository.findByEmail(regRequest.getEmail());
+		if (studentInRepository != null) {
+			new StudentResponse("Student Already Exists", false);
 		}
 		Student student = Student.builder().email(regRequest.getEmail()).password(regRequest.getPassword())
 				.name(regRequest.getName()).aadharCardNo(regRequest.getAadharCardNo())

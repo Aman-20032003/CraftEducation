@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 import com.craft.logs.repository.entity.*;
 import com.craft.logs.repository.AdminLogRepository;
+import com.craft.logs.repository.CourseLogRepository;
 import com.craft.logs.repository.StudentLogRepository;
 import com.craft.logs.repository.TeacherLogRepository;
 import com.craft.logs.repository.entity.AdminLogs;
@@ -15,14 +16,17 @@ public class LogService {
 	private AdminLogRepository adminLogRepository ;
 	private TeacherLogRepository teacherLogRepository;
 	private StudentLogRepository studentLogRepository;
+	private CourseLogRepository courseLogRepository;
 	
 	 
 	public LogService(AdminLogRepository adminLogRepository, TeacherLogRepository teacherLogRepository,
-			StudentLogRepository studentLogRepository) {
+			StudentLogRepository studentLogRepository, CourseLogRepository courseLogRepository) {
 		this.adminLogRepository = adminLogRepository;
 		this.teacherLogRepository = teacherLogRepository;
 		this.studentLogRepository = studentLogRepository;
+		this.courseLogRepository = courseLogRepository;
 	}
+
 	
 	
 	LocalDateTime localDateTime = LocalDateTime.now();
@@ -61,7 +65,14 @@ public class LogService {
 		return message;
 		}
 	
-	
+	public String logDetailsOfCourse(String message,LogLevels logLevel) {
+		CourseLogs courseLogs= CourseLogs.builder()
+				.message(message)
+				.dateTime(formattedDateTime)
+				.level(logLevel).build();
+		 courseLogRepository.save(courseLogs);
+		return message;
+		}
 	
 	
 	
