@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.craft.controller.request.AdminLoginRequest;
 import com.craft.controller.response.AdminResponse;
+import com.craft.controller.response.JwtResponse;
 import com.craft.service.AdminServiceImp;
 
 @RestController
@@ -20,12 +21,7 @@ public class AdminController {
 	private AdminServiceImp adminService;
 
 	@GetMapping("/login")
-	public ResponseEntity<AdminResponse> login(@RequestBody AdminLoginRequest adminLoginRequest) {
-		  AdminResponse response = adminService.adminLogin(adminLoginRequest);
-	        if (response.isSuccess()) {
-	            return ResponseEntity.status(HttpStatus.OK).body(response);
-	        } else {
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-	        }
+	public ResponseEntity<JwtResponse> login(@RequestBody AdminLoginRequest adminLoginRequest) {
+		 return adminService.adminLogin(adminLoginRequest);
 	}
 }
