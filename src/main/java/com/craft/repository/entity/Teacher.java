@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,7 +52,6 @@ public class Teacher implements UserDetails{
 //	@JsonIgnore
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<TeachersAddress> address;
-	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	

@@ -13,5 +13,7 @@ public class StudentRegRequest {
 	private long aadharCardNo;
 	private String qualification;
 	private long contactNo;
+	private List<StudentCourseRequest> courses;
+	private List<AddressRequest> address;
 	
 }

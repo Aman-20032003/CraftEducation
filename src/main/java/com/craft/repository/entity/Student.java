@@ -51,8 +51,6 @@ public class Student implements UserDetails {
 	private List<StudentAdddress> addressList;
 	@OneToMany(cascade = CascadeType.PERSIST)
 	private List<StudentCourse>   courseList;
-	@OneToOne
-	private JwtToken  jwtToken ;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

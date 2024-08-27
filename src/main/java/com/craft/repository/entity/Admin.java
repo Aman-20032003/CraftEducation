@@ -2,7 +2,6 @@ package com.craft.repository.entity;
 
 import java.util.Collection;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +36,6 @@ public class Admin implements UserDetails {
 	private int id;
 	private String email;
 	private String password;
-
 	@Enumerated(EnumType.STRING)
 	private Role role;
 

@@ -27,6 +27,8 @@ import com.craft.repository.StudentRepository;
 import com.craft.repository.entity.JwtToken;
 
 import com.craft.repository.entity.Student;
+import com.craft.repository.entity.StudentAdddress;
+import com.craft.repository.entity.StudentCourse;
 import com.craft.service.helper.DtoToAddressEntityConverter;
 import com.craft.service.helper.DtoToStudentCourseEntityConverter;
 
@@ -39,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StudentServiceImp implements IStudentService {
 
 	@Autowired
-	private DtoToStudentCourseEntityConverter entityConverter;
+	private DtoToStudentCourseEntityConverter courseEntityConverter;
 	@Autowired
 	private DtoToAddressEntityConverter addressEntityConverter;
 	@Autowired
@@ -56,7 +58,10 @@ public class StudentServiceImp implements IStudentService {
 	private JwtRepository jwtRepository;
 
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
-
+		List<StudentAdddress> addresses = addressEntityConverter
+				.convertStudentAddressListToEntity(regRequest.getAddress());
+		List<StudentCourse> courses = courseEntityConverter
+				.convertStremOfCourseToEntity(regRequest.getCourses());
 //		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
 //		Matcher m = p.matcher(regRequest.getEmail());
 //		if (!m.find()) {
@@ -64,6 +69,7 @@ public class StudentServiceImp implements IStudentService {
 //					.body(new StudentJwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
 //		}
 		Student studentInRepository = repository.findByEmail(regRequest.getEmail());
+
 		if (studentInRepository != null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
 					.body(new StudentResponse("Student already exists", false));
@@ -71,7 +77,10 @@ public class StudentServiceImp implements IStudentService {
 		Student student = Student.builder().email(regRequest.getEmail())
 				.password(encoder.encode(regRequest.getPassword())).name(regRequest.getName())
 				.aadharCardNo(regRequest.getAadharCardNo()).qualification(regRequest.getQualification())
-				.contactNo(regRequest.getContactNo()).build();
+				.contactNo(regRequest.getContactNo())
+				.addressList(addresses)
+				.courseList(courses)
+				.build();
 
 		if (student == null) {
 			log.warn(logService.logDetailsOfStudent("Student Registration Failed! With Email: " + regRequest.getEmail(),
