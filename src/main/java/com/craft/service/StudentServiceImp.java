@@ -16,6 +16,7 @@ import com.craft.controller.request.StudentLoginRequest;
 import com.craft.controller.request.StudentRegRequest;
 import com.craft.controller.response.JwtResponse;
 import com.craft.controller.response.StudentResponse;
+import com.craft.controller.response.TeacherResponse;
 import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
 import com.craft.repository.StudentRepository;
@@ -58,7 +59,8 @@ public class StudentServiceImp implements IStudentService {
 //		}
 		Student studentInRepository = repository.findByEmail(regRequest.getEmail());
 		if (studentInRepository != null) {
-			new StudentResponse("Student Already Exists", false);
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(new StudentResponse("Student already exists", false));
 		}
 		Student student = Student.builder().email(regRequest.getEmail()).password(regRequest.getPassword())
 				.name(regRequest.getName()).aadharCardNo(regRequest.getAadharCardNo())

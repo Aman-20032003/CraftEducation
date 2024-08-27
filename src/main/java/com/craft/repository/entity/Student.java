@@ -18,13 +18,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,6 +47,12 @@ public class Student implements UserDetails {
 	private long aadharCardNo;
 	private String qualification;
 	private long contactNo;
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<StudentAdddress> addressList;
+	@OneToMany(cascade = CascadeType.PERSIST)
+	private List<StudentCourse>   courseList;
+	@OneToOne
+	private JwtToken  jwtToken ;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
