@@ -1,7 +1,7 @@
 package com.craft.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,8 +25,7 @@ public class AdminServiceImp implements IAdminService {
 	@Autowired
 	private AdminRepository adminRepository;
 
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
+
 
 	@Autowired
 	private LogService logService;
@@ -36,30 +35,16 @@ public class AdminServiceImp implements IAdminService {
 	private JwtHelper helper;
 
 	public ResponseEntity<JwtResponse> adminLogin(AdminLoginRequest adminLoginRequest) {
-		String email = adminLoginRequest.getEmail();
-		String password = adminLoginRequest.getPassword();
-		String cacheValue = "cacheAdmin";
-		Admin admin = (Admin) redisTemplate.opsForHash().get(email, cacheValue);
+		Admin admin= adminRepository.findByEmailAndPassword(adminLoginRequest.getEmail(), adminLoginRequest.getPassword());
 		if (admin != null) {
 			UserDetails detailsService = customUserDetailsService.loadUserByUsername(admin.getEmail());
 			String token = helper.generateToken(detailsService);
-			log.info(logService.logDetailsOfStudent(
-					"Admin Login Successfully With Email: " + adminLoginRequest.getEmail(), LogLevels.INFO));
 
-			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Login Successfully", true, token));
-		}
-
-		Admin admin1 = adminRepository.findByEmailAndPassword(email, password);
-		if (admin1 != null) {
-			UserDetails detailsService = customUserDetailsService.loadUserByUsername(admin1.getEmail());
-			String token = helper.generateToken(detailsService);
-
-			redisTemplate.opsForHash().put(email, cacheValue, admin1);
+			
 			log.info(logService.logDetailsOfStudent(
 					"Admin Login Successfully With Email: " + adminLoginRequest.getEmail(), LogLevels.INFO));
 			return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Login Successfully", true, token));
 		} else {
-			evictCache(email);
 			log.warn(logService.logDetailsOfStudent(
 					"Admin Login Failed  Invalid Email or Password with Email: " + adminLoginRequest.getEmail(),
 					LogLevels.WARN));
@@ -68,7 +53,4 @@ public class AdminServiceImp implements IAdminService {
 		}
 	}
 
-	public void evictCache(String email) { 
-		redisTemplate.delete(email);
-	}
 }
