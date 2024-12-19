@@ -3,17 +3,22 @@ package com.craft.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.craft.controller.request.ModifyTeacherRequest;
 import com.craft.controller.request.RemoveTeacherRequest;
 import com.craft.controller.request.TeacherLoginRequest;
 import com.craft.controller.request.TeacherRegisterationRequest;
 import com.craft.controller.response.JwtResponse;
 import com.craft.controller.response.TeacherResponse;
 import com.craft.service.TeacherServiceImp;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/teacher")
@@ -25,11 +30,11 @@ TeacherServiceImp teacherService;
 
 @PostMapping("/registeration")
 
-public ResponseEntity<TeacherResponse> teacherRegisteration(@RequestBody TeacherRegisterationRequest registerationRequest){
+public ResponseEntity<TeacherResponse> teacherRegisteration(@Valid @RequestBody TeacherRegisterationRequest registerationRequest){
 	return teacherService.registerNewTeacher(registerationRequest);
 	
 }
-@PostMapping("/login")
+@GetMapping("/login")
 public ResponseEntity<JwtResponse> teacherLogin (@RequestBody TeacherLoginRequest loginRequest){
 	return teacherService.teacherLogin(loginRequest);
 
@@ -37,5 +42,10 @@ public ResponseEntity<JwtResponse> teacherLogin (@RequestBody TeacherLoginReques
 @DeleteMapping("/removeTeacher")
 public ResponseEntity<TeacherResponse>removeTeacher(@RequestBody RemoveTeacherRequest removeTeacherRequest){
 	return teacherService.removeTeacher(removeTeacherRequest);
+}
+@PutMapping("/updateTeacher")
+public ResponseEntity<TeacherResponse>updateTeacher(@Valid @RequestBody String email, ModifyTeacherRequest modifyTeacherRequest){
+	return teacherService.updateTeacher(email, modifyTeacherRequest);
+	
 }
 }

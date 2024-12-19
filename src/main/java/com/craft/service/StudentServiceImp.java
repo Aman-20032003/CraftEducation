@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
+
 import com.craft.config.JwtHelper;
 
 import com.craft.controller.request.ModifyStudentCredentialsReq;
@@ -19,16 +22,20 @@ import com.craft.controller.request.StudentLoginRequest;
 import com.craft.controller.request.StudentRegRequest;
 import com.craft.controller.response.JwtResponse;
 import com.craft.controller.response.StudentResponse;
-import com.craft.controller.response.TeacherResponse;
+
 import com.craft.logs.LogService;
 import com.craft.logs.repository.entity.LogLevels;
-import com.craft.repository.JwtRepository;
+import com.craft.repository.AdminRepository;
+import com.craft.repository.StudentJwtRepo;
 import com.craft.repository.StudentRepository;
-import com.craft.repository.entity.JwtToken;
-
+import com.craft.repository.TeacherRepository;
+import com.craft.repository.entity.Admin;
+import com.craft.repository.entity.Role;
 import com.craft.repository.entity.Student;
 import com.craft.repository.entity.StudentAdddress;
 import com.craft.repository.entity.StudentCourse;
+import com.craft.repository.entity.StudentJWT;
+import com.craft.repository.entity.Teacher;
 import com.craft.service.helper.DtoToAddressEntityConverter;
 import com.craft.service.helper.DtoToStudentCourseEntityConverter;
 
@@ -52,34 +59,55 @@ public class StudentServiceImp implements IStudentService {
 	private UserDetailsService customUserDetailsService;
 	@Autowired
 	private JwtHelper helper;
+
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 	@Autowired
-	private PasswordEncoder encoder;
+	private StudentJwtRepo studentJwtRepo;
+	
 	@Autowired
-	private JwtRepository jwtRepository;
+	private AdminRepository adminRepository;
+	@Autowired
+	private TeacherRepository teacherRepository;
 
 	public ResponseEntity<StudentResponse> studentRegister(StudentRegRequest regRequest) {
 		List<StudentAdddress> addresses = addressEntityConverter
 				.convertStudentAddressListToEntity(regRequest.getAddress());
-		List<StudentCourse> courses = courseEntityConverter
-				.convertStremOfCourseToEntity(regRequest.getCourses());
+		List<StudentCourse> courses = courseEntityConverter.convertStremOfCourseToEntity(regRequest.getCourses());
 //		Pattern p = Pattern.compile("^[a-z0-9]+@[a-z]+\\.[a-z]{2,}$");
 //		Matcher m = p.matcher(regRequest.getEmail());
 //		if (!m.find()) {
 //			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 //					.body(new StudentJwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
 //		}
+		Admin admin= adminRepository.findByEmail(regRequest.getEmail());
+		Teacher teacher= teacherRepository.findByEmailId(regRequest.getEmail());
+		if(admin!=null || teacher!=null) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(new StudentResponse("Email is Already Registered As A Student Or Admin!! Try With Another Email", false));
+		}
+		
 		Student studentInRepository = repository.findByEmail(regRequest.getEmail());
 
 		if (studentInRepository != null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT)
 					.body(new StudentResponse("Student already exists", false));
 		}
+		  String aadharNo = String.valueOf(regRequest.getAadharCardNo());
+		if(aadharNo.length()!=12) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StudentResponse("Invalid Aadhar No ! Must Be 12 Digits", false));
+		}
+		 String contactNo = String.valueOf(regRequest.getContactNo());
+		if(contactNo.length()!=10) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new StudentResponse("Invalid Contact No ! Must Be 10 Digits", false));
+		
+		}
+
 		Student student = Student.builder().email(regRequest.getEmail())
 				.password(encoder.encode(regRequest.getPassword())).name(regRequest.getName())
 				.aadharCardNo(regRequest.getAadharCardNo()).qualification(regRequest.getQualification())
-				.contactNo(regRequest.getContactNo())
-				.addressList(addresses)
-				.courseList(courses)
+				.contactNo(regRequest.getContactNo()).addressList(addresses).courseList(courses).role(Role.STUDENT)
 				.build();
 
 		if (student == null) {
@@ -104,13 +132,17 @@ public class StudentServiceImp implements IStudentService {
 //					.body(new JwtResponse("Invalid Email Format Or Email Must Not Be Empty", false, null));
 //		}
 
-		Student student = repository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-		if (student != null) {
+		Student student = repository.findByEmail(loginRequest.getEmail());
+		if (student != null && encoder.matches(loginRequest.getPassword(), student.getPassword())) {
+
 			UserDetails details = customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
-			String token = helper.generateToken(details);
-			String existingtoken = getOrGenerateToken(student.getEmail());
+			String token = helper.generateToken(details, student.getPassword());
+			String existingtoken = getOrGenerateToken(student.getEmail(), student.getPassword());
+
 			Claims claims1 = JwtHelper.decodeJwt(existingtoken);
 			Claims claims2 = JwtHelper.decodeJwt(token);
+			System.out.println(claims1);
+			System.out.println(claims2);
 			if (claims1.getSubject().equals(claims2.getSubject())) {
 				log.info(logService.logDetailsOfStudent("Login Successfully With Email: " + loginRequest.getEmail(),
 						LogLevels.INFO));
@@ -124,8 +156,8 @@ public class StudentServiceImp implements IStudentService {
 
 	}
 
-	private String getOrGenerateToken(String userEmail) {
-		JwtToken existingToken = jwtRepository.findByEmail(userEmail);
+	private String getOrGenerateToken(String userEmail, String password) {
+		StudentJWT existingToken = studentJwtRepo.findByEmail(userEmail);
 
 		if (existingToken != null) {
 			Date now = new Date();
@@ -134,13 +166,13 @@ public class StudentServiceImp implements IStudentService {
 				return existingToken.getToken();
 			} else {
 				// Token is expired, remove it
-				jwtRepository.delete(existingToken);
+				studentJwtRepo.delete(existingToken);
 			}
 		}
 
 		// Token does not exist or is expired, generate a new one
 		UserDetails details = customUserDetailsService.loadUserByUsername(userEmail);
-		String newToken = helper.generateToken(details);
+		String newToken = helper.generateToken(details, password);
 		saveJwtToken(userEmail, newToken);
 		return newToken;
 	}
@@ -148,25 +180,47 @@ public class StudentServiceImp implements IStudentService {
 	private void saveJwtToken(String userEmail, String token) {
 		Date issuedAt = new Date();
 		Date expiresAt = new Date(issuedAt.getTime() + JwtHelper.JWT_TOKEN_VALIDITY * 1000);
-		JwtToken jwtToken = JwtToken.builder().email(userEmail).issuedAt(issuedAt).token(token).expiresAt(expiresAt)
-				.build();
-		jwtRepository.save(jwtToken); // Save the token in the database
+		Student student = repository.findByEmail(userEmail);
+
+		StudentJWT jwtToken = StudentJWT.builder().email(userEmail).issuedAt(issuedAt).token(token).expiresAt(expiresAt)
+				.student(student).build();
+		studentJwtRepo.save(jwtToken); // Save the token in the database
 	}
 
 	public ResponseEntity<StudentResponse> removeStudent(RemoveStudentRequest removeStudentRequest) {
-		Student student = repository.findByEmail(removeStudentRequest.getEmail());
-		if (student != null) {
-			repository.delete(student);
-			log.info(logService.logDetailsOfStudent(
-					"Student Removed Successfully With Email: " + removeStudentRequest.getEmail(), LogLevels.INFO));
+	    // Fetch the student by email
+	    Student student = repository.findByEmail(removeStudentRequest.getEmail());
 
-			return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse("Student Removed Successfully", true));
-		}
-		log.warn(logService.logDetailsOfStudent("Student Not Found! With Email: " + removeStudentRequest.getEmail(),
-				LogLevels.WARN));
+	    // If student is null, log a warning and return a "not found" response
+	    if (student == null) {
+	        log.warn(logService.logDetailsOfStudent(
+	                "Student Not Found! With Email: " + removeStudentRequest.getEmail(),
+	                LogLevels.WARN));
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(new StudentResponse("Student Not Found", false));
+	    }
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StudentResponse("Student Not Found", false));
+	    // Fetch the associated JWT (if any)
+//	    StudentJWT studentJWT = studentJwtRepo.findByEmail(student.getEmail());
+//
+//	    // Remove the JWT if it exists
+//	    if (studentJWT != null) {
+//	        studentJwtRepo.delete(studentJWT);
+//	    }
+
+	    // Remove the student
+	    repository.delete(student);
+
+	    // Log the successful removal
+	    log.info(logService.logDetailsOfStudent(
+	            "Student Removed Successfully With Email: " + removeStudentRequest.getEmail(),
+	            LogLevels.INFO));
+
+	    // Return a success response
+	    return ResponseEntity.status(HttpStatus.OK)
+	            .body(new StudentResponse("Student Removed Successfully", true));
 	}
+
 
 	@Override
 	public List<Student> displayStudents() {
@@ -179,20 +233,20 @@ public class StudentServiceImp implements IStudentService {
 
 		Student student = repository.findByEmail(email);
 		if (student != null) {
+
 			student.setAadharCardNo(credentialsReq.getAadharCardNo());
 			student.setContactNo(credentialsReq.getContactNo());
-			student.setEmail(credentialsReq.getEmail());
 			student.setQualification(credentialsReq.getQualification());
 			student.setName(credentialsReq.getName());
 			repository.save(student);
 			log.info(logService.logDetailsOfStudent(
-					"Student Credentials Updated Successfully With Email: " + credentialsReq.getEmail(),
+					"Student Credentials Updated Successfully With Email: " + student.getEmail(),
 					LogLevels.INFO));
 
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new StudentResponse("Student Credentials Updated Successfully", true));
 		}
-		log.warn(logService.logDetailsOfStudent("Student Not found With Email: " + credentialsReq.getEmail(),
+		log.warn(logService.logDetailsOfStudent("Student Not found With Email: " + email,
 				LogLevels.WARN));
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 				.body(new StudentResponse("Student Not Found With Email : " + email, false));

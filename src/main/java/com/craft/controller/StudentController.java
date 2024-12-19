@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +23,8 @@ import com.craft.controller.response.StudentResponse;
 import com.craft.repository.entity.Student;
 import com.craft.service.IStudentService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -31,7 +33,7 @@ public class StudentController {
 private IStudentService service;
 
 @PostMapping("/registeration")
-public ResponseEntity<StudentResponse> StudentRegisteration(@RequestBody StudentRegRequest regRequest){
+public ResponseEntity<StudentResponse> StudentRegisteration(@Valid @RequestBody StudentRegRequest regRequest){
 	return service.studentRegister(regRequest);
 	
 }
@@ -40,7 +42,7 @@ public ResponseEntity<JwtResponse>StudentLogin (@RequestBody StudentLoginRequest
 	return service.studentLogin(loginRequest);
 
 }
-//@PreAuthorize("hasRole('STUDENT')")
+
 @DeleteMapping("/removeStudent")
 public ResponseEntity<StudentResponse>deleteStudent(@RequestBody RemoveStudentRequest removeStudentRequest){
 	return service.removeStudent(removeStudentRequest);
@@ -51,7 +53,7 @@ public List<Student>getAllStudents(){
 }
 
 @PutMapping("/update/{email}")
-public ResponseEntity<StudentResponse>updateStudentCrerdentials(@PathVariable String email , @RequestBody ModifyStudentCredentialsReq credentialsReq){
+public ResponseEntity<StudentResponse>updateStudentCrerdentials( @PathVariable String email ,@Valid @RequestBody ModifyStudentCredentialsReq credentialsReq){
 	return service.modifyStudentCredentials(email, credentialsReq);
 }
 }

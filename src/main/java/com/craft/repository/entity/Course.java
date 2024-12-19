@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,9 +34,13 @@ public class Course{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int id;
+	@NotEmpty(message="Course Name  Must Not Be Empty")
 	String courseName;
+	@NotEmpty(message ="Description Must Not Be Empty")
 	String courseDescription;
+	@NotEmpty(message ="Duration Must Not Be Empty")
 	String duration;
+	@NotEmpty(message ="Fee Must Not Be Empty")
 	double fee;
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	List<Subject> subjects;
