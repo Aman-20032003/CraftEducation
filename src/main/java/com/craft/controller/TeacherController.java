@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import com.craft.controller.response.TeacherResponse;
 import com.craft.service.TeacherServiceImp;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/teacher")
@@ -43,8 +45,8 @@ public ResponseEntity<JwtResponse> teacherLogin (@RequestBody TeacherLoginReques
 public ResponseEntity<TeacherResponse>removeTeacher(@RequestBody RemoveTeacherRequest removeTeacherRequest){
 	return teacherService.removeTeacher(removeTeacherRequest);
 }
-@PutMapping("/updateTeacher")
-public ResponseEntity<TeacherResponse>updateTeacher(@Valid @RequestBody String email, ModifyTeacherRequest modifyTeacherRequest){
+@PutMapping("/updateTeacher/{email}")
+public ResponseEntity<TeacherResponse>updateTeacher(@PathVariable String email, @Valid @RequestBody  ModifyTeacherRequest modifyTeacherRequest){
 	return teacherService.updateTeacher(email, modifyTeacherRequest);
 	
 }

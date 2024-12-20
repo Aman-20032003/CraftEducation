@@ -33,9 +33,9 @@ public class SecurityConfig {
 						"/teacher/login", "/v3/api-docs", "/configuration/ui", "/swagger-resources/**",
 						"/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-ui/**")
 				.permitAll().requestMatchers("/teacher/removeTeacher", "/student/removeStudent")
-				.hasAnyAuthority(Role.ADMIN.name()).requestMatchers("/student/getAll", "/teacher/updateTeacher")
-				.hasAnyAuthority(Role.ADMIN.name()).requestMatchers("/student/update/{email}")
-				.hasAnyAuthority(Role.STUDENT.name()).
+				.hasAnyAuthority(Role.ADMIN.name()).requestMatchers("/student/getAll", "/teacher/updateTeacher/{email}")
+				.hasAnyAuthority(Role.ADMIN.name(),Role.TEACHER.name()).requestMatchers("/student/update/{email}")
+				.hasAnyAuthority(Role.STUDENT.name(),Role.ADMIN.name(),Role.TEACHER.name()).
 
 				anyRequest().authenticated()).exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationConfig))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

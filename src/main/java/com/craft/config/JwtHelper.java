@@ -74,7 +74,9 @@ public class JwtHelper {
 
 	public static Claims decodeJwt(String token) {
 		try {
-			return Jwts.parser().setSigningKey(JwtHelper.secret) // Use the same signing key
+			return Jwts.parser().setSigningKey(secret)
+					// Use the same signing key
+					   .setAllowedClockSkewSeconds(60)
 					.parseClaimsJws(token).getBody();
 		} catch (Exception e) {
 			e.printStackTrace();
