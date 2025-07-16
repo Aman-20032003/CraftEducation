@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CraftEducationApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void test() {
+		System.out.println("working");
 	}
 
 }

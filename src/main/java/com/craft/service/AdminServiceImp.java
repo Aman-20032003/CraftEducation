@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-
 import com.craft.config.JwtHelper;
 import com.craft.controller.request.AdminLoginRequest;
 import com.craft.controller.response.JwtResponse;
@@ -59,12 +58,12 @@ public class AdminServiceImp implements IAdminService {
 				return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse("Login Successfully", true, token));
 			}
 		}
-			log.warn(logService.logDetailsOfStudent(
-					"Admin Login Failed  Invalid Email or Password with Email: " + adminLoginRequest.getEmail(),
-					LogLevels.WARN));
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-					.body(new JwtResponse("Login Failed !! Invalid Email or Password", false, null));
-		
+		log.warn(logService.logDetailsOfStudent(
+				"Admin Login Failed  Invalid Email or Password with Email: " + adminLoginRequest.getEmail(),
+				LogLevels.WARN));
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+				.body(new JwtResponse("Login Failed !! Invalid Email or Password", false, null));
+
 	}
 
 	private String getOrGenerateToken(String userEmail, String password) {
@@ -87,30 +86,25 @@ public class AdminServiceImp implements IAdminService {
 		saveJwtToken(userEmail, newToken);
 		return newToken;
 	}
-		private void saveJwtToken(String userEmail, String token) {
-		    Date issuedAt = new Date();
-		    Date expiresAt = new Date(issuedAt.getTime() + JwtHelper.JWT_TOKEN_VALIDITY * 1000);
-		    Admin admin = adminRepository.findByEmail(userEmail);
 
-		    AdminJwt existingToken = adminJwtRepo.findByEmail(userEmail);
-		    if (existingToken != null) {
-		        // Update existing token
-		        existingToken.setToken(token);
-		        existingToken.setIssuedAt(issuedAt);
-		        existingToken.setExpiresAt(expiresAt);
-		        adminJwtRepo.save(existingToken);
-		    } else {
-		        // Save a new token
-		        AdminJwt jwtToken = AdminJwt.builder()
-		            .email(userEmail)
-		            .issuedAt(issuedAt)
-		            .token(token)
-		            .expiresAt(expiresAt)
-		            .admin(admin)
-		            .build();
-		        adminJwtRepo.save(jwtToken);
-		    }
+	private void saveJwtToken(String userEmail, String token) {
+		Date issuedAt = new Date();
+		Date expiresAt = new Date(issuedAt.getTime() + JwtHelper.JWT_TOKEN_VALIDITY * 1000);
+		Admin admin = adminRepository.findByEmail(userEmail);
+
+		AdminJwt existingToken = adminJwtRepo.findByEmail(userEmail);
+		if (existingToken != null) {
+			// Update existing token
+			existingToken.setToken(token);
+			existingToken.setIssuedAt(issuedAt);
+			existingToken.setExpiresAt(expiresAt);
+			adminJwtRepo.save(existingToken);
+		} else {
+			// Save a new token
+			AdminJwt jwtToken = AdminJwt.builder().email(userEmail).issuedAt(issuedAt).token(token).expiresAt(expiresAt)
+					.admin(admin).build();
+			adminJwtRepo.save(jwtToken);
 		}
-
+	}
 
 }
